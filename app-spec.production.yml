@@ -4,7 +4,6 @@ alerts:
 databases:
 - engine: PG
   name: db
-  version: "12"
 features:
 - buildpack-stack=ubuntu-22
 ingress:
@@ -19,7 +18,7 @@ ingress:
     match:
       path:
         prefix: /hasura
-name: ec-demo-app
+name: digital-ocean-tutorial
 region: tor
 services:
 - build_command: npm run build
@@ -30,7 +29,7 @@ services:
     value: ${db.DATABASE_URL}
   github:
     branch: main
-    repo: ephemerecreative/ec-demo-project
+    repo: pwj0618/digital-ocean-tutorial
   http_port: 3000
   instance_count: 1
   instance_size_slug: basic-xxs
@@ -60,10 +59,10 @@ services:
   - key: HASURA_GRAPHQL_ADMIN_SECRET
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:rwQThvB94wt26pUiubn7/Wh8xYetmREn:EqpB+ASYW+oq9FBPCkJvZRg+krznsVJDJNWfIbrSVhTOz0GvML3UR6D+fkx9Sg==]
+    value: EV[1:ATFeCkL4la+HoPkz7758z2FCI4/GE3J+:9coOIDhNQNfKx4Zmow23dz3/+VOLDGE5]
   github:
     branch: main
-    repo: ephemerecreative/ec-demo-project
+    repo: pwj0618/digital-ocean-tutorial
   http_port: 8080
   instance_count: 1
   instance_size_slug: basic-xxs
