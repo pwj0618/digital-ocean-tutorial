@@ -1,0 +1,11 @@
+image:
+  file: .gitpod.Dockerfile
+
+
+tasks:
+  - name: Start Next
+    init: (cd web && npm i)
+    command: (cd web && npm run dev)
+  - name: Start Docker Compose
+    init: docker-compose build
+    command: docker-compose up
