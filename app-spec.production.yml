@@ -1,0 +1,71 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+databases:
+- engine: PG
+  name: db
+  version: "12"
+features:
+- buildpack-stack=ubuntu-22
+ingress:
+  rules:
+  - component:
+      name: web
+    match:
+      path:
+        prefix: /
+  - component:
+      name: hasura
+    match:
+      path:
+        prefix: /hasura
+name: ec-demo-app
+region: tor
+services:
+- build_command: npm run build
+  environment_slug: node-js
+  envs:
+  - key: DATABASE_URL
+    scope: RUN_TIME
+    value: ${db.DATABASE_URL}
+  github:
+    branch: main
+    repo: ephemerecreative/ec-demo-project
+  http_port: 3000
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: web
+  run_command: npm start
+  source_dir: web
+- dockerfile_path: hasura/Dockerfile
+  envs:
+  - key: DATABASE_URL
+    scope: RUN_TIME
+    value: ${db.DATABASE_URL}
+  - key: HASURA_GRAPHQL_METADATA_DIR
+    scope: RUN_TIME
+    value: /hasura/metadata
+  - key: HASURA_GRAPHQL_MIGRATIONS_DIR
+    scope: RUN_TIME
+    value: /hasura/migrations
+  - key: HASURA_GRAPHQL_EXPERIMENTAL_FEATURES
+    scope: RUN_TIME
+    value: naming_convention
+  - key: HASURA_GRAPHQL_ENABLE_CONSOLE
+    scope: RUN_TIME
+    value: "true"
+  - key: HASURA_GRAPHQL_DATABASE_URL
+    scope: RUN_TIME
+    value: ${db.DATABASE_URL}
+  - key: HASURA_GRAPHQL_ADMIN_SECRET
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:rwQThvB94wt26pUiubn7/Wh8xYetmREn:EqpB+ASYW+oq9FBPCkJvZRg+krznsVJDJNWfIbrSVhTOz0GvML3UR6D+fkx9Sg==]
+  github:
+    branch: main
+    repo: ephemerecreative/ec-demo-project
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: hasura
+  source_dir: hasura
