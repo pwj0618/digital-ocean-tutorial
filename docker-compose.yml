@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  mailer:
+    image: mailhog/mailhog
+    ports:
+      - 8025:8025
+      - 1025:1025
+
+  hasura:
+    image: hasura/graphql-engine:v2.37.0-ce.cli-migrations-v3
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+    volumes:
+      - ./hasura:/hasura
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+      HASURA_GRAPHQL_ADMIN_SECRET: password
+      HASURA_GRAPHQL_METADATA_DIR: /hasura/metadata
+      HASURA_GRAPHQL_MIGRATIONS_DIR: /hasura/migrations
+      HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: naming_convention
+
+  postgres:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
